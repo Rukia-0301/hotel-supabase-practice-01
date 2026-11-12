@@ -6,6 +6,7 @@ import SubmitButton from "./SubmitButton";
 import { createBooking } from "./actions";
 import { isValidDateString } from "@/app/components/isValidDateString";
 import { isNumber } from "@/app/components/isNumber";
+import { formatDate } from "@/app/components/formatDate";
 
 type BookingConfirmPage = {
   params: Promise<{ roomSlug: string }>;
@@ -66,13 +67,13 @@ async function BookingDetails({ params, searchParams }: BookingConfirmPage) {
     return <p>客室情報の取得に失敗しました。</p>
   }
 
-  const formatDate = (date: string) => {
-    if (date === '') {
-      return false;
-    }
-    const [year, month, day] = date.split('-');
-    return `${year}年${month}月${day}日`;
-  };
+  // const formatDate = (date: string) => {
+  //   if (date === '') {
+  //     return false;
+  //   }
+  //   const [year, month, day] = date.split('-');
+  //   return `${year}年${month}月${day}日`;
+  // };
 
   const diffDays = (Date.parse(checkOut) - Date.parse(checkIn)) / 86400000;
   const totalAmount = room.price_per_night * diffDays * guestsNumber;

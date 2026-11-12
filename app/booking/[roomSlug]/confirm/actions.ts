@@ -31,25 +31,25 @@ export async function createBooking(formData: FormData) {
     return;
   }
 
-  const {data: roomData, error: roomDataError} = await supabase
+  const {data: roomTypeData, error: roomTypeDataError} = await supabase
     .from('01__room_types')
     .select('*')
     .eq('slug', roomSlug)
     .single()
   ;
-  if (roomDataError || !roomData) {
-    console.error(roomDataError);
+  if (roomTypeDataError || !roomTypeData) {
+    console.error(roomTypeDataError);
     throw new Error('客室情報の取得に失敗しました。');
   }
 
-  if (String(roomData.id) !== roomId) {
+  if (String(roomTypeData.id) !== roomId) {
     return;
   }
 
   const diffDays = (Date.parse(checkOut) - Date.parse(checkIn)) / 86400000; 
-  const totalPrice = Number(roomData.price_per_night * guests * diffDays);
+  const totalPrice = Number(roomTypeData.price_per_night * guests * diffDays);
 
-  if (guests > Number(roomData.capacity) || !Number.isFinite(diffDays) || !Number.isFinite(totalPrice) || totalPrice <= 0) {
+  if (guests > Number(roomTypeData.capacity) || !Number.isFinite(diffDays) || !Number.isFinite(totalPrice) || totalPrice <= 0) {
     return;
   }
 
@@ -80,22 +80,28 @@ export async function createBooking(formData: FormData) {
     redirect(`/booking/${roomSlug}/unavailable?${bookingParams}`);
   }
 
+  const roomTypeId = roomTypeData.id;
   const selectedRoomId = availableRoomIds[0];
 
-  const {error: bookingInsertError} = await supabase
+  const { data: bookingData , error: bookingInsertError} = await supabase
     .from('01__bookings')
     .insert({
       'user_id': userId,
       'room_id': selectedRoomId,
+      'room_type_id': roomTypeId,
       'check_in_date': checkIn,
       'check_out_date': checkOut,
       'guests_count': guests,
       'total_price': totalPrice,
       'status': 'confirmed',
     })
+    .select('id')
+    .single()
   ;
-  if(bookingInsertError) {
+  if(!bookingData ||bookingInsertError) {
     console.error(bookingInsertError);
-    return;
+    redirect(`/booking/${roomSlug}/error?${bookingParams}`);
   };
+
+  redirect(`/booking/${roomSlug}/success/${bookingData.id}`);
 } 

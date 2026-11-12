@@ -18,11 +18,11 @@ export async function getRoomAvailability({checkIn, checkOut}: getRoomAvailabili
   }
 
   const { data: bookedRooms, error: bookingsError } = await supabase
-    .from('01__bookings')
-    .select("room_id")
-    .eq('status', 'confirmed')
-    .lt('check_in_date', checkOut)
-    .gt('check_out_date', checkIn);
+  .rpc('get_booked_room_ids', {
+    p_check_in: checkIn,
+    p_check_out: checkOut,
+  })
+  ;
 
   if (bookingsError) {
     throw new Error('予約情報の取得に失敗しました', {cause: bookingsError});

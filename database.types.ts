@@ -22,6 +22,7 @@ export type Database = {
           guests_count: number
           id: string
           room_id: string
+          room_type_id: string
           special_requests: string | null
           status: string
           total_price: number
@@ -34,6 +35,7 @@ export type Database = {
           guests_count?: number
           id?: string
           room_id: string
+          room_type_id: string
           special_requests?: string | null
           status?: string
           total_price?: number
@@ -46,6 +48,7 @@ export type Database = {
           guests_count?: number
           id?: string
           room_id?: string
+          room_type_id?: string
           special_requests?: string | null
           status?: string
           total_price?: number
@@ -146,7 +149,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_booked_room_ids: {
+        Args: { p_check_in: string; p_check_out: string }
+        Returns: {
+          room_id: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

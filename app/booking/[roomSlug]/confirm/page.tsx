@@ -67,21 +67,20 @@ async function BookingDetails({ params, searchParams }: BookingConfirmPage) {
     return <p>客室情報の取得に失敗しました。</p>
   }
 
-  // const formatDate = (date: string) => {
-  //   if (date === '') {
-  //     return false;
-  //   }
-  //   const [year, month, day] = date.split('-');
-  //   return `${year}年${month}月${day}日`;
-  // };
-
   const diffDays = (Date.parse(checkOut) - Date.parse(checkIn)) / 86400000;
   const totalAmount = room.price_per_night * diffDays * guestsNumber;
 
   const confirmButton = <SubmitButton />;
+
+  const bookingParams = new URLSearchParams({
+    checkIn,
+    checkOut,
+    guests,
+  });
+
   const authButton =
     <>
-      <button type="submit" className="block w-full text-center mt-4 py-3 font-bold border border-[#bf4d36] bg-white text-[#bf4d36]">新規登録 ・ ログイン</button>
+      <Link href={`/login?next=${encodeURIComponent(`/booking/${roomSlug}/confirm?${bookingParams}`)}`} className="block w-full text-center mt-4 py-3 font-bold border border-[#bf4d36] bg-white text-[#bf4d36]">新規登録 ・ ログイン</Link>
       <p className="text-center text-sm mt-2 text-gray-500">※予約を確定するにはログインする必要があります。</p>
     </>
     ;
@@ -134,7 +133,7 @@ async function BookingDetails({ params, searchParams }: BookingConfirmPage) {
             </form>) : authButton
         }
       </div>
-      <Link href={`/booking/${roomSlug}?checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}`} className="flex items-center justify-center mx-4 mt-4 text-center py-2 border border-gray-700">
+      <Link href={`/booking/${roomSlug}?${bookingParams}`} className="flex items-center justify-center mx-4 mt-4 text-center py-2 border border-gray-700">
         <span className="text-xl mr-4">&lt;</span>
         <p>予約内容を修正</p>
       </Link>

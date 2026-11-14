@@ -30,7 +30,3 @@ export default function Account() {
     </>
   );
 }
-
-export async function TotalBookings() {
-
-}

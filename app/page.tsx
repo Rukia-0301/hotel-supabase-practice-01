@@ -18,7 +18,7 @@ export default function HotelPage({searchParams}: HotelPageProps) {
         <SelectedDateSearch searchParams={searchParams} />
       </Suspense>
       <h1 className="pl-3 my-4 font-bold text-xl border-l-4 border-gray-700">客室一覧</h1>
-      <Suspense>
+      <Suspense fallback={<p className="mt-32 text-center">客室を検索中...</p>}>
         <FilterdRoomList searchParams={searchParams} />
       </Suspense>
     </>

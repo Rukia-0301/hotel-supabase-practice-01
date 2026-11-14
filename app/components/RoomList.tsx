@@ -61,7 +61,7 @@ export async function RoomList({ checkIn = '', checkOut = '', guests = '1' }: Ro
                 <p className="text-sm ml-auto font-bold py-1 px-3 rounded-full bg-green-100 text-green-700 sm:text-base">残り{remainingRooms}部屋</p>
               }
           </div>
-          <p className="text-sm mt-2 sm:text-base">{room.description}</p>
+          <p className="mt-2">{room.description}</p>
         </Link>
       </li>
     );

@@ -30,7 +30,7 @@ export async function RoomList({ checkIn = '', checkOut = '', guests = '1' }: Ro
     }
   } catch (error) {
     console.error(error);
-    return <p>客室情報の取得に失敗しました。</p>;
+    return <p className="text-center mt-10">客室情報の取得に失敗しました。</p>;
   }
 
   const roomList = roomTypesData.map((room) => {
@@ -52,16 +52,16 @@ export async function RoomList({ checkIn = '', checkOut = '', guests = '1' }: Ro
         <Link href={`/booking/${room.slug}?${bookingParams}`}>
           <div className="bg-gray-400 w-full h-60 rounded-md"></div>
           <div className="flex items-center mt-4">
-            <h2 className="font-bold text-xl">{room.name}</h2>
+            <h2 className="font-bold sm:text-xl">{room.name}</h2>
               {
                 remainingRooms <= 0 ?
-                <p className="ml-auto font-bold py-1 px-3 rounded-full bg-red-100 text-red-700">満室</p> :
+                <p className="text-sm ml-auto font-bold py-1 px-3 rounded-full bg-red-100 text-red-700 sm:text-base">満室</p> :
                 remainingRooms < totalRooms / 3 || remainingRooms <= 1 ?
-                <p className="ml-auto font-bold py-1 px-3 rounded-full bg-orange-100 text-orange-700">残り{remainingRooms}部屋</p> :
-                <p className="ml-auto font-bold py-1 px-3 rounded-full bg-green-100 text-green-700">残り{remainingRooms}部屋</p>
+                <p className="text-sm ml-auto font-bold py-1 px-3 rounded-full bg-orange-100 text-orange-700 sm:text-base">残り{remainingRooms}部屋</p> :
+                <p className="text-sm ml-auto font-bold py-1 px-3 rounded-full bg-green-100 text-green-700 sm:text-base">残り{remainingRooms}部屋</p>
               }
           </div>
-          <p className="mt-2">{room.description}</p>
+          <p className="text-sm mt-2 sm:text-base">{room.description}</p>
         </Link>
       </li>
     );

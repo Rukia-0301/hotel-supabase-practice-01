@@ -18,14 +18,14 @@ export default async function BookingPage({ params, searchParams }: BookingParam
 
   return (
     <>
-      <Suspense>
+      <Suspense fallback={<p className="mt-32 text-center">読み込み中...</p>}>
         <RoomData params={params} searchParams={searchParams} />
       </Suspense>
     </>
   )
 }
 
-async function RoomData({params, searchParams}: BookingParams) {
+async function RoomData({ params, searchParams }: BookingParams) {
   const { roomSlug } = await params;
   const { checkIn = '', checkOut = '', guests = '1' } = await searchParams;
 

@@ -10,7 +10,7 @@ type DateSearchProps = {
   searchPath?: string;
 }
 
-export function DateSearch({ initialCheckIn = '', initialCheckOut = '', initialGuests = '1', searchPath = '/' }: DateSearchProps) {
+export function DateSearch({ initialCheckIn = '', initialCheckOut = '', initialGuests = '2', searchPath = '/' }: DateSearchProps) {
 
   if(!isValidDateString(initialCheckIn)) {
     initialCheckIn = '';

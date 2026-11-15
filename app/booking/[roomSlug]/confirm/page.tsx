@@ -7,6 +7,7 @@ import { createBooking } from "./actions";
 import { isValidDateString } from "@/app/components/isValidDateString";
 import { isNumber } from "@/app/components/isNumber";
 import { formatDate } from "@/app/components/formatDate";
+import { formatNumber } from "@/app/components/formaNumber";
 
 type BookingConfirmPage = {
   params: Promise<{ roomSlug: string }>;
@@ -17,13 +18,13 @@ type BookingConfirmPage = {
   }>;
 }
 
-export default async function BookingConfirmPage({ params, searchParams }: BookingConfirmPage) {
+export default function BookingConfirmPage({ params, searchParams }: BookingConfirmPage) {
 
   return (
     <>
       <h1 className="pl-3 my-4 font-bold text-xl border-l-4 border-gray-700">予約内容の確認</h1>
       <p className="ml-4 text-gray-500">以下の内容で予約を行います。内容をよくご確認の上、確定ボタンを押してください。</p>
-      <Suspense fallback={<p className="text-center mt-10">予約内容を確認中...</p>}>
+      <Suspense fallback={<p className="text-center mt-32">予約内容を確認中...</p>}>
         <BookingDetails
           params={params}
           searchParams={searchParams}
@@ -59,12 +60,9 @@ async function BookingDetails({ params, searchParams }: BookingConfirmPage) {
     .eq('slug', roomSlug)
     .single()
     ;
-  if (!room) {
-    throw new Error('客室情報の取得に失敗しました。');
-  }
-  if (error) {
-    console.error(error);
-    return <p>客室情報の取得に失敗しました。</p>
+  if (!room || error) {
+    console.error('客室情報の取得に失敗しました。', { code: error });
+    return <p className="mt-32 text-center">客室情報の取得に失敗しました。</p>
   }
 
   const diffDays = (Date.parse(checkOut) - Date.parse(checkIn)) / 86400000;
@@ -88,10 +86,6 @@ async function BookingDetails({ params, searchParams }: BookingConfirmPage) {
     <div className="flex items-center justify-center mt-4 text-red-600">不正な日付が含まれています。予約内容を修正してください。</div>
     ;
 
-  const formatNumber = (value: number) => {
-    return isNumber(value) ? value.toLocaleString() : '－';
-  }
-
   const isBookingValid =
     isValidDateString(checkIn) &&
     isValidDateString(checkOut) &&
@@ -105,15 +99,21 @@ async function BookingDetails({ params, searchParams }: BookingConfirmPage) {
     <>
       <div className="mt-4 border border-gray-300 p-4 rounded-lg">
         <div className="w-full h-64 bg-gray-400"></div>
-        <h2 className="font-bold mt-3 mb-2">客室名</h2>
-        <p>{room.name}</p>
+        <h2 className="font-bold mt-3 mb-2 text-gray-500">客室名</h2>
+        <p className="font-bold">{room.name}</p>
         {/* <p className="scrollbar-hidden h-16 text-gray-500 overflow-auto">{room.description}</p> */}
         <div className="mt-4 pt-3 border-t border-gray-300">
-          <h2 className="font-bold mb-1">ご宿泊期間</h2>
-          <p><span className="inline-block w-24">チェックイン</span>{formatDate(checkIn)} {formatDate(checkIn) ? '15:00 ～' : '－'}</p>
-          <p><span className="inline-block w-24">チェックアウト</span>{formatDate(checkOut)} {formatDate(checkOut) ? '11:00' : '－'}</p>
-          <p className="mt-2 text-right text-lg text-gray-500">{formatNumber(diffDays)}泊{formatNumber(diffDays + 1)}日</p>
+          <h2 className="font-bold mb-2 text-gray-500">ご宿泊期間</h2>
+          <div className="flex flex-col mb-2 font-bold sm:flex-row sm:gap-7">
+            <p>チェックイン</p>
+            <p>{formatDate(checkIn)} {formatDate(checkIn) ? '15:00 ～' : '－'}</p>
+          </div>
+          <div className="flex flex-col font-bold sm:flex-row sm:gap-4">
+            <p>チェックアウト</p>
+            <p>{formatDate(checkOut)} {formatDate(checkOut) ? '11:00' : '－'}</p>
+          </div>
         </div>
+        <p className="mt-2 text-right font-bold text-lg text-gray-500">{formatNumber(diffDays)}泊{formatNumber(diffDays + 1)}日</p>
         <div className="mt-4 pt-3 border-t border-gray-300">
           <h2 className="font-bold mb-1">宿泊料金合計</h2>
           <p className="text-right">{formatNumber(diffDays)}泊 1室</p>
